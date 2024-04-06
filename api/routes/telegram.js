@@ -6,7 +6,7 @@ const serverTelegramClient = require("../server-telegram-client");
 const { getTelegramAccount } = require("../datastore");
 const router = express.Router();
 
-router.get("/sessions", (req, res) => {
+router.get("/session", (req, res) => {
   const account = getTelegramAccount();
   if (!account) {
     return res.status(404).json({ message: "no account found." });
@@ -15,14 +15,14 @@ router.get("/sessions", (req, res) => {
   res.status(200).json(account);
 });
 
-router.post("/sessions", (req, res) => {
+router.post("/session", (req, res) => {
   const { session, phone } = req.body;
   fs.writeFileSync(TELEGRAM_ACCOUNT_FILE, JSON.stringify({ session, phone }));
   serverTelegramClient.setSession(session);
   res.status(200).json({ message: "session successfully saved." });
 });
 
-router.delete("/sessions", (req, res) => {
+router.delete("/session", (req, res) => {
   if (fs.existsSync(TELEGRAM_ACCOUNT_FILE)) {
     fs.rmSync(TELEGRAM_ACCOUNT_FILE);
   }

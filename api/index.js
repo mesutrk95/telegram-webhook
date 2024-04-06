@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const app = express(); 
+const cors = require('cors')
 
 const serverTelegramClient = require("./server-telegram-client.js");
 serverTelegramClient.init();
@@ -8,6 +9,7 @@ serverTelegramClient.init();
 const telegram = require('./routes/telegram')
 const webhooks = require('./routes/webhooks')
 
+app.use(cors())
 app.use('/telegram', telegram);
 app.use('/webhooks', webhooks);
 
