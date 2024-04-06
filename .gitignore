@@ -1,0 +1,8 @@
+node_modules
+build
+data
+cache
+
+
+.env
+.env.local
