@@ -11,7 +11,7 @@ const nextConfig = {
     output: "export",
   }),
   ...(process.env.UI_BASE_URL && {
-    baseUrl: process.env.UI_BASE_URL,
+    basePath: process.env.UI_BASE_URL,
     assetPrefix: process.env.UI_BASE_URL,
   }),
 };
