@@ -3,6 +3,8 @@ const { TelegramClient } = require("telegram");
 const { NewMessage } = require("telegram/events");
 const { StringSession } = require("telegram/sessions");
 const { getTelegramAccount, getWebhooks } = require("./datastore");
+const { PromisedWebSockets } = require("telegram/extensions");
+const { createTelegramClient } = require("./utils");
 
 class ServerTelegramClient {
   status = "none";
@@ -23,24 +25,12 @@ class ServerTelegramClient {
     this.reconnect();
   }
 
-  createClient(session) {
-    return new TelegramClient(
-      new StringSession(session),
-      Number(process.env.TLG_APP_ID),
-      process.env.TLG_APP_HASH,
-      {
-        connectionRetries: 5,
-      }
-    );
-  }
-
   setWebhooks(webhooks) {
     this.webhooks = webhooks;
     this.reconnect();
   }
 
   setSession(session) {
-    console.log("sesioooooooooon", session);
     this.session = session;
     this.reconnect();
   }
@@ -59,12 +49,11 @@ class ServerTelegramClient {
     const { message } = event;
     if (message) {
       for (const { url } of this.webhooks) {
-        try {
-          console.log("webhook called", url, message.text);
-          axios.post(url, { message: message.text });
-        } catch (error) {
-          console.log(error);
-        }
+        console.log("webhook called", url, message.text);
+        axios
+          .post(url, { message: message.text })
+          .then(() => {})
+          .catch((err) => {});
       }
 
       // const dialog = dialogs.find(
@@ -87,15 +76,16 @@ class ServerTelegramClient {
     }
     if (!this.session) return;
 
-    const tlg = (this.tlg = this.createClient(this.session));
+    const tlg = (this.tlg = createTelegramClient(this.session));
+    // tlg.setLogLevel("debug")
     await tlg.connect();
     this.status = "connected";
 
     this.profile = await tlg.getMe().originalArgs;
 
-    client.client.addEventHandler((e) => this.onMessage(e), new NewMessage({}));
+    this.tlg.addEventHandler((e) => this.onMessage(e), new NewMessage({}));
     return () => {
-      client.client.removeEventHandler(this.onMessage);
+      this.tlg.removeEventHandler(this.onMessage);
     };
   }
 }

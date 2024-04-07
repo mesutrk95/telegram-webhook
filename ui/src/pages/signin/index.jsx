@@ -2,39 +2,31 @@ import { useEffect, useState } from "react";
 import SignInTelegramAccount from "./SignInTelegramAccount";
 import { toast } from "react-toastify";
 import api from "@/api";
+import ServerSignInTelegram from "./ServerSignInTelegam";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(true);
   const [account, setAccount] = useState(null);
 
-  async function onNewAccount({ phone, session }) {
-    await api
-      .post("/telegram/session", { session, phone })
-      .then(({ data }) => {
-        toast.success("Successfully logged in!");
-      })
-      .catch((err) => {
-        toast.error("Cannot save session to server.");
-      });
-
+  async function onSignIn({ phone, session }) {
     setAccount({ phone, session });
   }
   async function signOut() {
     await api
-      .delete("/telegram/session")
+      .post("/telegram/signOut")
       .then(({ data }) => {
-        setAccount(null)
+        setAccount(null);
         toast.success("Successfully signed out!");
       })
       .catch((err) => {
         toast.error("Couldn't sign out successfully.");
-      }); 
+      });
   }
 
   useEffect(() => {
     setLoading(true);
     api
-      .get("/telegram/session")
+      .get("/telegram")
       .then(({ data }) => {
         setLoading(false);
         const { session, phone } = data;
@@ -61,7 +53,7 @@ export default function SignIn() {
           </div>
         </div>
       )}
-      {!account && <SignInTelegramAccount onNewAccount={onNewAccount} />}
+      {!account && <ServerSignInTelegram onSignIn={onSignIn} />}
     </div>
   );
 }
