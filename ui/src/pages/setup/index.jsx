@@ -1,8 +1,6 @@
 import api from "@/api";
 import React, { useEffect, useState } from "react";
 
-function InputItem() {}
-
 export default function Setup() {
   const [webhooks, setWebhooks] = useState([]);
   const [newUrl, setNewUrl] = useState("");
@@ -63,7 +61,7 @@ export default function Setup() {
 
       <div className=" mt-5">
         {webhooks.map((w) => (
-          <div className="row align-items-center bg-light rounded border mb-2">
+          <div key={w.id} className="row align-items-center bg-light rounded border mb-2">
             <div className="col  p-3">{w.url}</div>
             <div className="col-auto">
               <div className="btn btn-danger" onClick={(e) => deleteWebhook(w)}>

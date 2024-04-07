@@ -1,37 +1,75 @@
 const axios = require("axios");
-const { TelegramClient } = require("telegram");
+const { TelegramClient, Api } = require("telegram");
 const { NewMessage } = require("telegram/events");
 const { StringSession } = require("telegram/sessions");
 const { getTelegramAccount, getWebhooks } = require("./datastore");
 const { PromisedWebSockets } = require("telegram/extensions");
-const { createTelegramClient } = require("./utils");
+const { createTelegramClient, truncateCenter, replaceAll } = require("./utils");
+const fs = require("fs");
 
 class ServerTelegramClient {
   status = "none";
   webhooks = [];
-  inited = false;
+  initiated = false;
 
-  init() {
-    if (this.inited) {
-      console.log("telegram server already inited.");
+  async init() {
+    if (this.initiated) {
+      console.log("[tlg-client] client already initiated.");
       return;
     }
-    console.log("telegram server initiating ...");
+    console.log("[tlg-client] client initiating ...");
     this.webhooks = getWebhooks();
     const tlgAccount = getTelegramAccount();
-    this.session = tlgAccount?.session;
-    console.log("telegram server inited", this.webhooks, this.session);
-    this.inited = true;
+    this.setSession(tlgAccount?.session);
+    this.setWebhooks(this.webhooks);
+    this.initiated = true;
+    console.log("[tlg-client] client initiated.");
     this.reconnect();
+  }
+
+  async loadCache() {}
+  async getChat(id) {
+    const result = await this.tlg.invoke(
+      new Api.messages.GetChats({
+        id: [BigInt(id)],
+      })
+    );
+    return result;
+  }
+
+  async fetchChats() {
+    const result = await this.tlg.invoke(
+      new Api.messages.GetDialogs({
+        // offsetId: 0,
+        // offsetDate: 43,
+        // offsetId: 43,
+        offsetPeer: "me",
+        limit: 100,
+        // excludePinned: false,
+      })
+    );
+
+    // console.log(result);
+    // fs.writeFileSync(
+    //   `./cache/chats_${new Date().getTime()}.json`,
+    //   JSON.stringify(result, null, 2)
+    // );
+    return result;
   }
 
   setWebhooks(webhooks) {
     this.webhooks = webhooks;
+    console.log(
+      `[tlg-client] webhooks updated, total: ${this.webhooks.length}`
+    );
     this.reconnect();
   }
 
   setSession(session) {
     this.session = session;
+    console.log(
+      `[tlg-client] session updated to: ${truncateCenter(this.session, 20)}`
+    );
     this.reconnect();
   }
 
@@ -44,16 +82,61 @@ class ServerTelegramClient {
     }
   }
 
+  async getMessageBody(msg) {
+    const className = msg.peerId?.className;
+    let body = {
+      message: msg.message,
+      username: msg.chat?.username,
+      title: msg.chat?.title
+    };
+    if (className === "PeerChannel") {
+      body = {
+        ...body,
+        chatType: "channel", 
+        peerId: msg.peerId.channelId,
+      };
+    } else if (className === "PeerChat") {
+      body = {
+        ...body,
+        chatType: "group", 
+        peerId: msg.peerId.chatId,
+      };
+    } else if (className === "PeerUser") {
+      body = {
+        ...body,
+        chatType: "user",
+        peerId: msg.peerId.userId,
+      };
+    }
+    return body;
+  }
+
   async onMessage(event) {
     // console.log(event);
     const { message } = event;
+    // fs.writeFileSync(
+    //   `./cache/event_${new Date().getTime()}.json`,
+    //   JSON.stringify({message, chat: message.chat}, null, 2)
+    // );
     if (message) {
       for (const { url } of this.webhooks) {
-        console.log("webhook called", url, message.text);
+        const msg = await this.getMessageBody(message);
         axios
-          .post(url, { message: message.text })
-          .then(() => {})
-          .catch((err) => {});
+          .post(url, msg)
+          .then(() => {
+            console.log(
+              `[webhook] called, code: 200, url: ${url}, msg: ${replaceAll(
+                truncateCenter(msg.message, 20),
+                "\n",
+                ""
+              )}`
+            );
+          })
+          .catch(({ response }) => {
+            console.log(
+              `[webhook] call failed, code: ${response?.status}, url: ${url}`
+            );
+          });
       }
 
       // const dialog = dialogs.find(
@@ -70,10 +153,13 @@ class ServerTelegramClient {
   }
 
   async reconnect() {
+    if (!this.initiated) return false;
     if (this.tlg) {
       await this.tlg.destroy();
       this.tlg = null;
+      this.tlg.removeEventHandler(this.onMessage);
     }
+
     if (!this.session) return;
 
     const tlg = (this.tlg = createTelegramClient(this.session));
@@ -83,10 +169,8 @@ class ServerTelegramClient {
 
     this.profile = await tlg.getMe().originalArgs;
 
+    // await this.fetchChats();
     this.tlg.addEventHandler((e) => this.onMessage(e), new NewMessage({}));
-    return () => {
-      this.tlg.removeEventHandler(this.onMessage);
-    };
   }
 }
 

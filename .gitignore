@@ -3,7 +3,7 @@ build
 data
 cache
 export
-
+dist
 
 .env
 .env.local

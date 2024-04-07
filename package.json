@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start:api": "node api/index.js",
-    "build:ui": "cd "
+    "start:ui": "npm run dev --prefix ./ui -- --port 3222",
+    "build:ui": "cross-env EXPORT_UI_DIR=../dist&& npm run build --prefix ./ui"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "cross-env": "^7.0.3" 
+  }
 }

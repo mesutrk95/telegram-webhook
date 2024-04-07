@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import SignInTelegramAccount from "./SignInTelegramAccount";
+// import SignInTelegramAccount from "./SignInTelegramAccount";
 import { toast } from "react-toastify";
 import api from "@/api";
 import ServerSignInTelegram from "./ServerSignInTelegam";
+import Link from "next/link";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(true);
@@ -51,6 +52,9 @@ export default function SignIn() {
           <div className="btn btn-danger" onClick={signOut}>
             Sign out
           </div>
+          <Link className="btn btn-primary" href="/">
+            Back
+          </Link>
         </div>
       )}
       {!account && <ServerSignInTelegram onSignIn={onSignIn} />}

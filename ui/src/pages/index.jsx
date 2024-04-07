@@ -7,7 +7,7 @@ export default function Home() {
     <main className={styles.main}>
       <div className={styles.description}>
         <p>Welcome to telegram webhooks</p>
-        <div>
+        {/* <div>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             target="_blank"
@@ -23,7 +23,7 @@ export default function Home() {
               priority
             />
           </a>
-        </div>
+        </div> */}
       </div>
 
       <div className={styles.center}>
@@ -38,12 +38,12 @@ export default function Home() {
           <p>Sign-in to your telegram account</p>
         </Link>
 
-        <a href="/setup" className={styles.card}>
+        <Link href="/setup" className={styles.card}>
           <h2>
             Setup <span>-&gt;</span>
           </h2>
           <p>Setup webhook urls to receive events!</p>
-        </a>
+        </Link>
 {/* 
         <a
           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
