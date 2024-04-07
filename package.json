@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start:api": "node api/index.js",
-    "start:ui": "npm run dev --prefix ./ui -- --port 3222",
-    "build:ui": "cross-env EXPORT_UI_DIR=../dist&& npm run build --prefix ./ui",
-    "postinstall": "(cd api && yarn install) && (cd ../ui && yarn install)"
+    "start:ui": "yarn --cwd ./ui dev -- --port 3222",
+    "build:ui": "cross-env EXPORT_UI_DIR=../dist yarn --cwd ./ui build",
+    "postinstall": "(cd api && echo 'In ./api directory' && yarn install) && (cd ../ui && echo 'In ./ui directory' && yarn install)"
   },
   "author": "",
   "license": "ISC",
