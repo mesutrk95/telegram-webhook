@@ -10,7 +10,10 @@ const nextConfig = {
     distDir: process.env.UI_EXPORT_DIR,
     output: "export",
   }),
-  ...(process.env.UI_BASE_URL && { baseUrl: process.env.UI_BASE_URL }),
+  ...(process.env.UI_BASE_URL && {
+    baseUrl: process.env.UI_BASE_URL,
+    assetPrefix: process.env.UI_BASE_URL,
+  }),
 };
 
 export default nextConfig;
