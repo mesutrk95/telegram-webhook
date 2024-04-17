@@ -3,15 +3,22 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "repository": "https://github.com/mesutrk95/telegram-webhooks",
+  "author": "Masoud Rezakhanlou <masoud.rk95@gmail.com>",
+  "keywords": [
+    "telegram",
+    "webhooks",
+    "nodejs"
+  ],
   "scripts": {
     "start:api": "node api/index.js",
     "start:ui": "yarn --cwd ./ui dev -- --port 3222",
     "build:ui": "cross-env EXPORT_UI_DIR=../dist yarn --cwd ./ui build",
-    "postinstall": "(cd api && yarn install) && (cd ./ui && yarn install)"
+    "postinstall": "(cd api && yarn install) && (cd ./ui && yarn install)",
+    "publish": "npm publish"
   },
-  "author": "",
   "license": "ISC",
   "dependencies": {
-    "cross-env": "^7.0.3" 
+    "cross-env": "^7.0.3"
   }
 }
