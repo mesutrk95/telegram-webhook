@@ -3,7 +3,7 @@ const { mkdirSafe } = require("./utils.js");
 
 const express = require("express");
 const app = express();
-const cors = require("cors"); 
+const cors = require("cors");
 
 const serverTelegramClient = require("./server-telegram-client.js");
 
@@ -18,8 +18,10 @@ serverTelegramClient.init();
 app.use(cors());
 app.use(express.json());
 
-app.use("/telegram", telegram);
-app.use("/webhooks", webhooks);
+const router = express.Router();
+router.use("/telegram", telegram);
+router.use("/webhooks", webhooks);
+app.use(process.env.API_BASE_URL || "/", router);
 
 app.get("/health", (req, res) => {
   res.status(200).send("Healthy!");
