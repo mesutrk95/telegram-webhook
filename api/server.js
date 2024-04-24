@@ -1,12 +1,13 @@
 const { mkdirSafe } = require("./utils.js");
 const express = require("express");
 const cors = require("cors");
+const Config = require("./config");
 const telegram = require("./routes/telegram");
 const webhooks = require("./routes/webhooks");
 
 const serverTelegramClient = require("./server-telegram-client.js");
 
-module.exports = (port) => {
+module.exports = () => {
   const app = express();
 
   mkdirSafe("./cache");
@@ -23,7 +24,7 @@ module.exports = (port) => {
 
   serverTelegramClient.init();
 
-  app.listen(port, () => {
-    console.log(`API listening on port ${port}`);
+  app.listen(Config.get('PORT'), () => {
+    console.log(`API listening on port ${Config.get('PORT')}`);
   });
 };

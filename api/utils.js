@@ -1,12 +1,13 @@
 const fs = require("fs");
 const { TelegramClient } = require("telegram");
 const { StringSession } = require("telegram/sessions");
+const Config = require("./config");
 
 const createTelegramClient = (session) => {
   const tlg = new TelegramClient(
     new StringSession(session),
-    Number(process.env.TLG_APP_ID),
-    process.env.TLG_APP_HASH,
+    Number(Config.get("TLG_APP_ID")),
+    Config.get("TLG_APP_HASH"),
     {
       connectionRetries: 5,
     }
@@ -38,7 +39,7 @@ const mkdirSafe = (path) => {
     fs.mkdirSync(path);
   }
 };
-const truncate = (str, max ) => { 
+const truncate = (str, max) => {
   if (str.length > max) {
     return str.substring(0, max) + "...";
   } else {
@@ -46,11 +47,15 @@ const truncate = (str, max ) => {
   }
 };
 
-const truncateCenter = (str, max) => { 
-  if(!str) return '';
+const truncateCenter = (str, max) => {
+  if (!str) return "";
   if (str.length > max) {
-    const half = Math.floor(max / 2)
-    return str.substring(0, half) + "..." + str.substring(str.length - 1 - half, str.length - 1);
+    const half = Math.floor(max / 2);
+    return (
+      str.substring(0, half) +
+      "..." +
+      str.substring(str.length - 1 - half, str.length - 1)
+    );
   } else {
     return str;
   }
@@ -63,5 +68,5 @@ module.exports = {
   replaceAll,
   mkdirSafe,
   truncate,
-  truncateCenter
+  truncateCenter,
 };

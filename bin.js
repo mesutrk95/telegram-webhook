@@ -1,5 +1,4 @@
 const program = require("commander");
-const Indexer = require("./dist").default;
 const path = require("path");
 const { exit } = require("process");
 
@@ -30,11 +29,13 @@ function getProjectConfigPath() {
 const configFile = getProjectConfigPath();
 console.log("loading config from", configFile);
 const config = require(configFile);
-const server = require("./api/server")(config?.api?.port || 3223);
+const Config = require('./api/config');
+Config.set('PORT', config?.api?.port || 3223)
+
+const server = require("./api/server")();
 
 process.on("SIGINT", async () => {
   console.log("\nclosing watchers ...");
-  await indexer.destroy();
   console.log("bye!");
   exit(0);
 });
