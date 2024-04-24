@@ -6,7 +6,7 @@
   "scripts": {
     "start:api": "node api/index.js",
     "start:ui": "cross-env PORT=3222 yarn --cwd ./web start",
-    "build:ui": "cross-env EXPORT_UI_DIR=../dist yarn --cwd ./ui build",
+    "build:ui": "cross-env BUILD_PATH=../dist yarn --cwd ./web build",
     "postinstall": "(cd api && yarn install) && (cd ./web && yarn install)"
   },
   "author": "",

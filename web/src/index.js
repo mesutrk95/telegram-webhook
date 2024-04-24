@@ -8,20 +8,23 @@ import Index from "./routes";
 import SignIn from "./routes/signin";
 import Setup from "./routes/setup";
 
-const router = createBrowserRouter([
-  {
-    path: "/setup",
-    element: <Setup />,
-  },
-  {
-    path: "/signin",
-    element: <SignIn />,
-  },
-  {
-    path: "/",
-    element: <Index />,
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "/setup",
+      element: <Setup />,
+    },
+    {
+      path: "/signin",
+      element: <SignIn />,
+    },
+    {
+      path: "/",
+      element: <Index />,
+    },
+  ],
+  { basename: process.env.REACT_APP_BASE_URL }
+);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
