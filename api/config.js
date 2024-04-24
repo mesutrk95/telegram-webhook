@@ -6,6 +6,6 @@ module.exports = {
   },
 
   get(name) {
-    config[name];
+    return config[name];
   },
 };

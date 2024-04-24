@@ -18,11 +18,13 @@
     "start:ui": "yarn --cwd ./ui dev -- --port 3222",
     "build:ui": "cross-env EXPORT_UI_DIR=../dist yarn --cwd ./ui build",
     "postinstall": "(cd api && yarn install) && (cd ./ui && yarn install)",
+    "prepare": "echo 'building UI...'&& yarn run build:ui",
     "publish": "npm publish"
   },
   "license": "ISC",
   "dependencies": {
     "commander": "^12.0.0",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "http-server": "^14.1.1"
   }
 }

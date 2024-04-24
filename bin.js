@@ -1,18 +1,22 @@
-const program = require("commander");
+#!/usr/bin/env node
+const { program } = require("commander");
 const path = require("path");
 const { exit } = require("process");
 
 program
   .version("1.0.0")
   .description(
-    "Telegram Webhooks - Receive your telegram acount messages in your end easily!"
+    "Telegram Webhooks - Receive your telegram account messages in your end easily!"
   )
   .arguments("<directory>")
+  .option('--port <id>', "Webhooks server port default 3223")
+  .option('--tlg-app-id <id>', "Telegram App Id")
+  .option('--tlg-app-hash <id>', "Telegram App Hash")
   .parse(process.argv);
 
 program.parse();
 const options = program.opts();
-
+console.log(options);
 // Check if a directory argument is provided
 if (!program.args.length) {
   console.error("Error: please provide the path to the directory.");
@@ -29,9 +33,11 @@ function getProjectConfigPath() {
 const configFile = getProjectConfigPath();
 console.log("loading config from", configFile);
 const config = require(configFile);
-const Config = require('./api/config');
-Config.set('PORT', config?.api?.port || 3223)
+const Config = require("./api/config");
 
+const port = options.port || config?.api?.port || 3223
+
+Config.set("PORT", port);
 const server = require("./api/server")();
 
 process.on("SIGINT", async () => {
