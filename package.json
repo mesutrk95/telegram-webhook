@@ -6,7 +6,7 @@
   "scripts": {
     "start:api": "node api/index.js",
     "start:ui": "cross-env PORT=3222 cross-env PUBLIC_URL=/webhooks/telegram yarn --cwd ./web start",
-    "build:ui": "cross-env BUILD_PATH=../dist yarn --cwd ./web build",
+    "build:ui": "cross-env BUILD_PATH=../dist cross-env PUBLIC_URL=/webhooks/telegram yarn --cwd ./web build",
     "postinstall": "(cd api && yarn install) && (cd ./web && yarn install)"
   },
   "author": "",
