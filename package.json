@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start:api": "node api/index.js",
-    "start:ui": "yarn --cwd ./ui dev -- --port 3222",
+    "start:ui": "cross-env PORT=3222 yarn --cwd ./web start",
     "build:ui": "cross-env EXPORT_UI_DIR=../dist yarn --cwd ./ui build",
-    "postinstall": "(cd api && yarn install) && (cd ./ui && yarn install)"
+    "postinstall": "(cd api && yarn install) && (cd ./web && yarn install)"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cross-env": "^7.0.3" 
+    "cross-env": "^7.0.3",
+    "env-cmd": "^10.1.0"
   }
 }

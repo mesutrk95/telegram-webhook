@@ -25,6 +25,6 @@ app.get("/health", (req, res) => {
   res.status(200).send("Healthy!");
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`API listening on port ${process.env.PORT}`);
+app.listen(process.env.API_PORT, () => {
+  console.log(`API listening on port ${process.env.API_PORT}`);
 });

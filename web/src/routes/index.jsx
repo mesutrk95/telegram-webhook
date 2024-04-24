@@ -1,13 +1,13 @@
-import Image from "next/image";
-import styles from "./index.module.css";
-import Link from "next/link";
+import { Link } from "react-router-dom";
+import styles from "./index.module.scss";
 
-export default function Home() {
+export default function Index() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>Welcome to telegram webhooks</p>
-        {/* <div>
+    <>
+      <main className={styles.main}>
+        <div className={styles.description}>
+          <p>Welcome to telegram webhooks</p>
+          {/* <div>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             target="_blank"
@@ -24,27 +24,27 @@ export default function Home() {
             />
           </a>
         </div> */}
-      </div>
+        </div>
 
-      <div className={styles.center}>
-        <h2>Welcome to Telegram Webhooks!</h2>
-      </div>
+        <div className={styles.center}>
+          <h2>Welcome to Telegram Webhooks!</h2>
+        </div>
 
-      <div className={styles.grid}>
-        <Link href="/signin" className={styles.card}>
-          <h2>
-            Account <span>-&gt;</span>
-          </h2>
-          <p>Sign-in to your telegram account</p>
-        </Link>
+        <div className={styles.grid}>
+          <Link to="/signin" className={styles.card}>
+            <h2>
+              Account <span>-&gt;</span>
+            </h2>
+            <p>Sign-in to your telegram account</p>
+          </Link>
 
-        <Link href="/setup" className={styles.card}>
-          <h2>
-            Setup <span>-&gt;</span>
-          </h2>
-          <p>Setup webhook urls to receive events!</p>
-        </Link>
-{/* 
+          <Link to="/setup" className={styles.card}>
+            <h2>
+              Setup <span>-&gt;</span>
+            </h2>
+            <p>Setup webhook urls to receive events!</p>
+          </Link>
+          {/* 
         <a
           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           className={styles.card}
@@ -70,7 +70,8 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a> */}
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   );
 }

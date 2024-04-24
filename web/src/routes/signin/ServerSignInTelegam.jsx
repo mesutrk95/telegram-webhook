@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./SignInTelegramAccount.module.scss";
 import { toast } from "react-toastify";
-import api from "@/api";
+import api from "../../api";
 
 export default function ServerSignInTelegram({ onSignIn }) {
   const [loading, setLoading] = useState({});
@@ -87,7 +87,7 @@ export default function ServerSignInTelegram({ onSignIn }) {
   }
 
   return (
-    <div className={`${styles.newAccount} p-4`}>
+    <div className={`${styles.newAccount}`}>
       <h2>Sign-in to telegram account ({status})</h2>
       {status === "none" && (
         <>
