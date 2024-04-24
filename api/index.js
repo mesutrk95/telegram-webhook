@@ -1,5 +1,5 @@
 require("dotenv").config();
-const Config = require("config");
+const Config = require("./config");
 
 Config.set("PORT", process.env.PORT);
 Config.set("TLG_APP_ID", process.env.TLG_APP_ID);
